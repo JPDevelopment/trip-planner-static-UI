@@ -11,10 +11,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/public', express.static('public'));
 
+app.set('view engine', 'html');
+app.engine('html', nunjucks.render);
+var env = nunjucks.configure('views', { noCache: true });
+// require('./filters')(env);
+
 const server = app.listen(9001, function(){
   console.log("It's over 9000!");
 });
 
-app.get('/', function(req, res, next) {
-    res.send("Hello!");
+app.use('/', require('./routes'));
+
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// handle all errors (anything passed into `next()`)
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  console.error(err);
+  res.render('error');
 });
