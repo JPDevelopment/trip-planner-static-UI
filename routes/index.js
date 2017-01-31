@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
       })
       .then(function (dbActivities) {
         // res.json(outerScopeContainer);
-        res.render('home', {
+        res.render('index', {
           templateHotels: outerScopeContainer.dbHotels,
           templateRestaurants: outerScopeContainer.dbRestaurants,
           templateActivities: dbActivities
